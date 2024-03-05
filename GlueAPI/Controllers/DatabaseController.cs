@@ -37,5 +37,12 @@ namespace GlueAPI.Controllers
             var response = await _allService.DeleteDatabaseAsync(dbName);
             return response;
         }
+
+        [HttpPost]
+        public async Task<bool> CreateDatabase(string dbName, string description)
+        {
+            var response = await _allService.CreateDatabaseAsync(dbName, description);
+            return response;
+        }
     }
 }

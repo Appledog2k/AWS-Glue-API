@@ -1,4 +1,5 @@
 ﻿using Amazon.Glue.Model;
+using Amazon.Runtime;
 using GlueAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -51,6 +52,27 @@ namespace GlueAPI.Controllers
         public bool StartCrawler(string crawlerName)
         {
             var response = _allService.StartCrawlerAsync(crawlerName);
+            return response.Result;
+        }
+
+        [HttpGet]
+        public string GetCrawlerState(string crawlerName)
+        {
+            var response = _allService.GetCrawlerStateAsync(crawlerName);
+            return response.Result;
+        }
+
+        [HttpGet]
+        public List<Crawler> GetListCrawler()
+        {
+            var response = _allService.GetListCrawlerAsync();
+            return response.Result;
+        }
+
+        [HttpGet]
+        public string GetCrawlerLog(string crawlerName)
+        {
+            var response = _allService.GetCrawlerLogAsync(crawlerName);
             return response.Result;
         }
     }

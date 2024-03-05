@@ -1,3 +1,4 @@
+using Amazon.Appflow;
 using Amazon.Glue;
 using GlueAPI.Services;
 
@@ -10,7 +11,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IAllService, AllServices>();
+builder.Services.AddTransient<IAppflowServices, AppflowServices>();
 builder.Services.AddAWSService<IAmazonGlue>();
+builder.Services.AddAWSService<IAmazonAppflow>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

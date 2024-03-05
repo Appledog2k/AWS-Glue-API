@@ -1,4 +1,6 @@
-﻿using Amazon.Glue;
+﻿using Amazon.Appflow;
+using Amazon.Appflow.Model;
+using Amazon.Glue;
 using Amazon.Glue.Model;
 using System.Net;
 
@@ -7,7 +9,6 @@ namespace GlueAPI.Services
     public class AllServices : IAllService
     {
         private readonly IAmazonGlue _amazonGlue;
-
         public AllServices(IAmazonGlue amazonGlue)
         {
             _amazonGlue = amazonGlue;
@@ -301,7 +302,63 @@ namespace GlueAPI.Services
             return response.HttpStatusCode == HttpStatusCode.OK;
         }
 
+        public async Task<bool> CreateDatabaseAsync(string dbName, string description)
+        {
+            var request = new CreateDatabaseRequest
+            {
+                DatabaseInput = new DatabaseInput
+                {
+                    Name = dbName,
+                    Description = description
+                }
+            };
 
+            var response = await _amazonGlue.CreateDatabaseAsync(request);
+            return response.HttpStatusCode == HttpStatusCode.OK;
+        }
 
+        // Get State of Crawler (Running, Ready, etc.)
+        public async Task<string> GetCrawlerStateAsync(string crawlerName)
+        {
+            var response = await _amazonGlue.GetCrawlerAsync(new GetCrawlerRequest { Name = crawlerName });
+            return response.Crawler.State;
+        }
+
+        // Get List Crawler
+        public async Task<List<Crawler>> GetListCrawlerAsync()
+        {
+            var response = await _amazonGlue.GetCrawlersAsync(new GetCrawlersRequest());
+            return response.Crawlers;
+        }
+
+        // Create Table in Database
+        public async Task<bool> CreateTableAsync(string dbName, string tableName, string description, string inputFormat, string outputFormat, string location)
+        {
+            var request = new CreateTableRequest
+            {
+                DatabaseName = dbName,
+                TableInput = new TableInput
+                {
+                    Name = tableName,
+                    Description = description,
+                    StorageDescriptor = new StorageDescriptor
+                    {
+                        InputFormat = inputFormat,
+                        OutputFormat = outputFormat,
+                        Location = location
+                    }
+                }
+            };
+
+            var response = await _amazonGlue.CreateTableAsync(request);
+            return response.HttpStatusCode == HttpStatusCode.OK;
+        }
+
+        // Get log from crawler
+        public async Task<string> GetCrawlerLogAsync(string crawlerName)
+        {
+            var response = await _amazonGlue.GetCrawlerMetricsAsync(new GetCrawlerMetricsRequest { CrawlerNameList = new List<string> { crawlerName } });
+            return response.CrawlerMetricsList[0].CrawlerName;
+        }
     }
 }

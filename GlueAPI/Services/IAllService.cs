@@ -1,4 +1,5 @@
-﻿using Amazon.Glue.Model;
+﻿using Amazon.Appflow.Model;
+using Amazon.Glue.Model;
 
 namespace GlueAPI.Services
 {
@@ -19,5 +20,10 @@ namespace GlueAPI.Services
         Task<string> StartJobRunAsync(string jobName, string inputDatabase, string inputTable, string bucketName);
         Task<bool> CreateJobAsync(string dbName, string tableName, string bucketUrl, string jobName, string roleName, string description, string scriptUrl);
         Task<bool> DeleteJobAsync(string jobName);
+        Task<bool> CreateDatabaseAsync(string dbName, string description);
+        Task<string> GetCrawlerStateAsync(string crawlerName);
+        Task<List<Crawler>> GetListCrawlerAsync();
+        Task<bool> CreateTableAsync(string dbName, string tableName, string description, string inputFormat, string outputFormat, string location);
+        Task<string> GetCrawlerLogAsync(string crawlerName);
     }
 }
